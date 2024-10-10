@@ -28,8 +28,8 @@ fetch(apiUrl)
         }
       }).join('');
 
-      featuredGames.innerHTML += `
-      <div class="card">
+      const cardHTML =  `
+      <div class="card" data-id="${game.id}">
           <a href="#">
             <img class="img-game" src= "${game.background_image}" >
             <h3 class="game-title">${game.name}</h3>
@@ -37,11 +37,13 @@ fetch(apiUrl)
               ${platformsHTML}
             </div>
             <div class= "button">
-              <a href="/" class="btn" id="btn-valueID" value="${game.id}">VER MAS</a>
+              <a href="/html/game-details.html?${game.slug}" class="btn" id="btn-valueID" value="${game.id}">VER MAS</a>
             </div>
           </a>
         </div>
         `;
+
+      featuredGames.innerHTML += cardHTML;
     });
   })
   .catch(error => {
@@ -49,17 +51,4 @@ fetch(apiUrl)
   });
 
 
-const gameID = document.getElementById('btn-valueID').value;
-const video = `${apiUrl}/games/${gameID}/movies`
 
-fetch(video)
-  .then(response => response.json())
-  .then(data => {
-    data.results.forEach(video => {
-      const videoHTML = `<iframe width="100%" height="315" src="${video.trailer}
-      " frameborder="0" allowfullscreen></iframe>`
-      const game = data.results.find(game => game.id === video.game.id);
-      const gameCard = document.querySelector(`.card[data-id="${game.id}"]`)
-      gameCard.innerHTML += videoHTML;
-    });
-  })
